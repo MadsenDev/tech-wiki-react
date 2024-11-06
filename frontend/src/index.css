@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+input {
+  background-color: transparent;
+  -webkit-appearance: none; /* Remove default styling on Safari */
+  border: none;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Markdown */
+.markdown h1 {
+  @apply text-primary text-3xl font-bold mt-8 mb-4;
+}
+
+.markdown h2 {
+  @apply text-secondary text-2xl font-semibold mt-6 mb-3;
+}
+
+.markdown p {
+  @apply text-neutral-700 mb-4 leading-relaxed;
+}
+
+.markdown ul,
+.markdown ol {
+  @apply list-inside ml-6;
+}
+
+.markdown li {
+  @apply mb-2;
+}
+
+.markdown a {
+  @apply text-accent font-semibold underline hover:text-primary;
+}
+
+.markdown blockquote {
+  @apply border-l-4 border-neutral-300 pl-4 italic text-neutral-50;
+}
+
+.markdown code {
+  @apply font-mono px-1 py-0.5 rounded text-sm text-neutral-50 bg-neutral-800; /* Inline code */
+}
+
+.markdown pre {
+  @apply overflow-auto rounded-lg my-4 p-4 bg-neutral-900 text-sm; /* Preformatted block code */
+}
+
+.markdown pre code {
+  @apply text-neutral-50; /* Ensures code text color within <pre> */
+}
