@@ -17,8 +17,6 @@ router.get('/', async (req, res) => {
       status, // Add status filter
     } = req.query;
 
-    console.log(status);
-
     const where = {};
     const include = [
       { 
@@ -98,6 +96,30 @@ router.get('/slug/:slug', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'An error occurred while fetching the guide.' });
+  }
+});
+
+// Route to increment viewCount
+router.put('/slug/:slug/view', async (req, res) => {
+  const { slug } = req.params;
+  console.log('Incrementing view count for guide:', slug);
+
+  try {
+    // Find the guide by slug
+    const guide = await Guide.findOne({ where: { slug } });
+
+    if (!guide) {
+      return res.status(404).json({ error: 'Guide not found' });
+    }
+
+    // Increment the view count
+    guide.viewCount += 1;
+    await guide.save();
+
+    res.json({ success: true, message: 'View count updated', viewCount: guide.viewCount });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while updating the view count.' });
   }
 });
 

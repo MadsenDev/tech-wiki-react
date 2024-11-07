@@ -1,10 +1,10 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useGuides } from "../hooks/useGuides";
 import Header from "../components/common/Header";
 import Input from "../components/common/Input";
 import Select from "../components/common/Select";
-import { Link } from "react-router-dom";
-import { FaUser, FaCalendarAlt, FaTags, FaStar, FaSearch } from "react-icons/fa";
+import WideCard from "../components/common/WideCard";
+import { FaSearch } from "react-icons/fa";
 
 const AllGuidesPage = () => {
   const {
@@ -18,7 +18,7 @@ const AllGuidesPage = () => {
   } = useGuides();
 
   useEffect(() => {
-    fetchGuides('published');
+    fetchGuides("published");
   }, [fetchGuides]);
 
   const handleNextPage = () => {
@@ -64,39 +64,7 @@ const AllGuidesPage = () => {
       {/* Guides List */}
       <div className="space-y-6">
         {guides.map((guide) => (
-          <div
-            key={guide.id}
-            className="bg-white rounded-lg shadow-md p-6 transition-transform hover:scale-105"
-          >
-            <Link to={`/guide/${guide.slug}`} className="block hover:text-primary">
-              <h2 className="text-2xl font-semibold text-primary mb-2">{guide.title}</h2>
-              <p className="text-neutral-700 mb-4">{guide.summary}</p>
-
-              {/* Details Section */}
-              <div className="flex items-center text-neutral-600 text-sm space-x-4">
-                <div className="flex items-center">
-                  <FaUser className="mr-1" />
-                  <span>{guide.author ? `${guide.author.firstName} ${guide.author.lastName}` : "Unknown"}</span>
-                </div>
-                <div className="flex items-center">
-                  <FaCalendarAlt className="mr-1" />
-                  <span>{new Date(guide.createdAt).toLocaleDateString()}</span>
-                </div>
-                <div className="flex items-center">
-                  <FaStar className="mr-1" />
-                  <span>{guide.rating || "N/A"}</span>
-                </div>
-              </div>
-
-              {/* Categories Section */}
-              <div className="mt-4 flex items-center text-neutral-500 text-sm">
-                <FaTags className="mr-2 text-primary" />
-                <span>
-                  {guide.categories.map((category) => category.name).join(", ")}
-                </span>
-              </div>
-            </Link>
-          </div>
+          <WideCard key={guide.id} guide={guide} />
         ))}
       </div>
 

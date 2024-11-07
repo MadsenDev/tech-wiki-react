@@ -1,4 +1,3 @@
-// src/App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Layout from "./components/layouts/Layout";
@@ -8,10 +7,12 @@ import CategoryPage from "./pages/CategoryPage";
 import GuidePage from "./pages/GuidePage";
 import AllGuidesPage from "./pages/AllGuidesPage";
 import UserProfilePage from "./pages/UserProfilePage";
+import GuideSubmissionPage from "./pages/GuideSubmissionPage";
 
 import UserManagement from "./pages/admin/UserManagement";
 import CategoryManagement from "./pages/admin/CategoryManagement";
 import GuideManagement from "./pages/admin/GuideManagement";
+import GuideReviewPage from "./pages/admin/GuideReviewPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute"; // Import ProtectedRoute
 
 function App() {
@@ -24,6 +25,16 @@ function App() {
           <Route path="/guides" element={<AllGuidesPage />} />
           <Route path="/category/:slug" element={<CategoryPage />} />
           <Route path="/guide/:slug" element={<GuidePage />} />
+          
+          {/* Accessible to all logged-in users */}
+          <Route
+            path="/submit-guide"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "moderator", "user"]}>
+                <GuideSubmissionPage />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/profile/:username" element={<UserProfilePage />} />
 
@@ -31,7 +42,7 @@ function App() {
           <Route
             path="/admin/users"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin"]}>
                 <UserManagement />
               </ProtectedRoute>
             }
@@ -39,7 +50,7 @@ function App() {
           <Route
             path="/admin/categories"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin"]}>
                 <CategoryManagement />
               </ProtectedRoute>
             }
@@ -47,8 +58,16 @@ function App() {
           <Route
             path="/admin/guides"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={["admin"]}>
                 <GuideManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/submissions"
+            element={
+              <ProtectedRoute allowedRoles={["admin", "moderator"]}>
+                <GuideReviewPage />
               </ProtectedRoute>
             }
           />

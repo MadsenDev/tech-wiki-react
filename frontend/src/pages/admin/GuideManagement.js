@@ -134,7 +134,7 @@ const GuideManagement = () => {
         </Button>
       </div>
 
-      <table className="w-full bg-white rounded-lg shadow-lg">
+      <table className="w-full bg-neutral-700 rounded-lg shadow-lg text-neutral-200">
         <thead>
           <tr>
             <th className="px-4 py-2 text-left">Title</th>
@@ -146,7 +146,7 @@ const GuideManagement = () => {
         </thead>
         <tbody>
           {guides.map((guide) => (
-            <tr key={guide.id} className="border-t">
+            <tr key={guide.id} className="border-t border-neutral-600">
               <td className="px-4 py-2">{guide.title}</td>
               <td className="px-4 py-2">{guide.slug}</td>
               <td className="px-4 py-2">{guide.status}</td>

@@ -1,10 +1,10 @@
-// src/pages/admin/UserManagement.js
 import React, { useState } from "react";
 import { useUsers } from "../../hooks/useUsers";
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
 import Header from "../../components/common/Header";
 import Input from "../../components/common/Input";
+import Select from "../../components/common/Select";
 
 const UserManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,9 +27,6 @@ const UserManagement = () => {
   };
 
   const handleSearchChange = (e) => setSearchQuery(e.target.value);
-  const handleRoleChange = (e) => setRoleFilter(e.target.value);
-  const handleSortFieldChange = (e) => setSortField(e.target.value);
-  const handleSortOrderChange = (e) => setSortOrder(e.target.value);
 
   const applyFilters = () => {
     fetchUsers({ search: searchQuery, role: roleFilter, sortField, sortOrder });
@@ -50,23 +47,35 @@ const UserManagement = () => {
           onChange={handleSearchChange}
           className="w-1/3"
         />
-        <select value={roleFilter} onChange={handleRoleChange} className="border rounded px-4 py-2">
-          <option value="">All Roles</option>
-          <option value="user">User</option>
-          <option value="admin">Admin</option>
-          <option value="moderator">Moderator</option>
-        </select>
-        <select value={sortField} onChange={handleSortFieldChange} className="border rounded px-4 py-2">
-          <option value="id">ID</option>
-          <option value="username">Username</option>
-          <option value="email">Email</option>
-          <option value="role">Role</option>
-          <option value="createdAt">Registration Date</option>
-        </select>
-        <select value={sortOrder} onChange={handleSortOrderChange} className="border rounded px-4 py-2">
-          <option value="ASC">Ascending</option>
-          <option value="DESC">Descending</option>
-        </select>
+        <Select
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+          options={[
+            { value: "", label: "All Roles" },
+            { value: "user", label: "User" },
+            { value: "admin", label: "Admin" },
+            { value: "moderator", label: "Moderator" },
+          ]}
+        />
+        <Select
+          value={sortField}
+          onChange={(e) => setSortField(e.target.value)}
+          options={[
+            { value: "id", label: "ID" },
+            { value: "username", label: "Username" },
+            { value: "email", label: "Email" },
+            { value: "role", label: "Role" },
+            { value: "createdAt", label: "Registration Date" },
+          ]}
+        />
+        <Select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          options={[
+            { value: "ASC", label: "Ascending" },
+            { value: "DESC", label: "Descending" },
+          ]}
+        />
         <Button variant="primary" onClick={applyFilters}>
           Apply Filters
         </Button>
@@ -78,10 +87,10 @@ const UserManagement = () => {
         </Button>
       </div>
 
-      <table className="w-full bg-white rounded-lg shadow-lg">
+      <table className="w-full bg-neutral-700 rounded-lg shadow-lg text-neutral-200">
         <thead>
           <tr>
-          <th className="px-4 py-2 text-left">ID</th>
+            <th className="px-4 py-2 text-left">ID</th>
             <th className="px-4 py-2 text-left">Username</th>
             <th className="px-4 py-2 text-left">Email</th>
             <th className="px-4 py-2 text-left">First Name</th>
@@ -93,14 +102,16 @@ const UserManagement = () => {
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id} className="border-t">
-                <td className="px-4 py-2">{user.id}</td>
+            <tr key={user.id} className="border-t border-neutral-600">
+              <td className="px-4 py-2">{user.id}</td>
               <td className="px-4 py-2">{user.username}</td>
               <td className="px-4 py-2">{user.email}</td>
               <td className="px-4 py-2">{user.firstName}</td>
               <td className="px-4 py-2">{user.lastName}</td>
               <td className="px-4 py-2">{user.role}</td>
-              <td className="px-4 py-2">{new Date(user.createdAt).toLocaleDateString()}</td>
+              <td className="px-4 py-2">
+                {new Date(user.createdAt).toLocaleDateString()}
+              </td>
               <td className="px-4 py-2 flex justify-around">
                 <Button variant="outline" onClick={() => openModal(user)}>
                   Edit

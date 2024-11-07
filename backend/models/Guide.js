@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 0.0,
       },
       status: {
-        type: DataTypes.ENUM('draft', 'published', 'archived'),
+        type: DataTypes.ENUM('draft', 'published', 'archived', 'under_review'),
         defaultValue: 'draft',
       },
       viewCount: {

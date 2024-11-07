@@ -7,26 +7,26 @@ const Modal = ({ isOpen, onClose, title, children, wide = false }) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
+      className="fixed inset-0 flex items-center justify-center z-50 bg-neutral-900 bg-opacity-75"
       onClick={onClose}
     >
       <div
-        className={`bg-white rounded-2xl shadow-lg p-6 w-full ${wide ? "max-w-7xl" : "max-w-lg"} relative`}
+        className={`bg-neutral-800 rounded-2xl shadow-lg p-6 w-full ${wide ? "max-w-7xl" : "max-w-lg"} relative`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
         <div className="mb-4 relative">
-          <Header size="h3" align="center" color="primary">{title}</Header>
+          <Header size="h3" align="center" color="accent">{title}</Header>
           <button
             onClick={onClose}
-            className="absolute right-0 top-0 text-neutral-400 hover:text-neutral-600 text-2xl leading-none"
+            className="absolute right-0 top-0 text-neutral-500 hover:text-neutral-300 text-2xl leading-none"
           >
             &times;
           </button>
         </div>
 
         {/* Modal Content */}
-        <div className="text-neutral-700">{children}</div>
+        <div className="text-neutral-300">{children}</div>
       </div>
     </div>
   );

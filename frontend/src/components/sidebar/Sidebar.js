@@ -1,10 +1,10 @@
-// src/components/sidebar/Sidebar.js
 import React from "react";
 import SidebarSection from "./SidebarSection";
 import { useUser } from "../../context/UserContext";
 
 const Sidebar = () => {
-    const { user } = useUser();
+  const { user } = useUser();
+
   return (
     <aside className="w-64 bg-neutral-800 text-white min-h-screen shadow-nav flex flex-col">
       {/* Sidebar Header */}
@@ -22,10 +22,18 @@ const Sidebar = () => {
         />
         <SidebarSection
           title="Tools"
-          items={[
-            { label: "Settings", icon: "FaCog", path: "/settings" },
-          ]}
+          items={[{ label: "Settings", icon: "FaCog", path: "/settings" }]}
         />
+
+        {/* Moderation Section - visible to 'moderator' and 'admin' roles */}
+        {user && (user.role === "moderator" || user.role === "admin") && (
+          <SidebarSection
+            title="Moderation"
+            items={[
+              { label: "Review Submissions", icon: "FaClipboardList", path: "/admin/submissions" },
+            ]}
+          />
+        )}
 
         {/* Admin Section - visible only to users with 'admin' role */}
         {user && user.role === "admin" && (

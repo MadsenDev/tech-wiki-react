@@ -95,7 +95,7 @@ const getNestedCategories = () => {
   const renderCategoryRows = (category, level = 0) => (
     <React.Fragment key={category.id}>
       {/* Render current category row */}
-      <tr className={`border-t ${level === 0 ? "bg-gray-100" : "bg-white"}`}>
+      <tr className={`border-t border-neutral-600 ${level === 0 ? "bg-neutral-700" : "bg-neutral-800"}`}>
         <td className="px-4 py-2" style={{ paddingLeft: `${level === 0 ? 10 : level * 20}px` }}>
           {level > 0 && "└"} {category.name}
         </td>
@@ -135,7 +135,7 @@ const getNestedCategories = () => {
         </Button>
       </div>
 
-      <table className="w-full bg-white rounded-lg shadow-lg">
+      <table className="w-full bg-neutral-700 rounded-lg shadow-lg text-neutral-200">
         <thead>
           <tr>
             <th className="px-4 py-2 text-left">Name</th>

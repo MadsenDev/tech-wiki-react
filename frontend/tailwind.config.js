@@ -8,26 +8,26 @@ module.exports = {
   theme: {
     extend: {
       // Updated color scheme in tailwind.config.ts
-colors: {
-  primary: "#d84315", // Dark orange for primary actions and headers
-  secondary: "#ff7043", // Lighter orange for secondary actions and highlights
-  accent: "#ffab91", // Light orange accent for interactive elements
-  neutral: {
-    50: "#faf9f5",
-    100: "#f5f3ef",
-    200: "#e9e6d7",
-    300: "#dcd2b9",
-    400: "#c5af91",
-    500: "#a9906e",
-    600: "#8a7054",
-    700: "#6c5441",
-    800: "#4f3b31",
-    900: "#332720",
-  },
-  error: "#e53935", // Bright red for error messages
-  warning: "#ffb74d", // Warm yellow-orange for warnings
-  info: "#ff8a65", // Soft orange-pink for informational messages
-},
+      colors: {
+        primary: "#ff7043", // Lighter orange for primary actions and headers
+        secondary: "#ffab91", // Softer orange for secondary actions and highlights
+        accent: "#ffccbc", // Even lighter orange accent for interactive elements
+        neutral: {
+          900: "#121212", // Almost black background
+          800: "#1e1e1e", // Dark background for cards and sections
+          700: "#2c2c2c", // Slightly lighter for panel borders
+          600: "#424242", // Neutral-dark for input backgrounds and other elements
+          500: "#616161", // Neutral mid-gray for text and icons
+          400: "#757575", // Slightly brighter gray for inactive text
+          300: "#9e9e9e", // Light gray for secondary text
+          200: "#bdbdbd", // Even lighter for borders
+          100: "#e0e0e0", // Almost white for highlights
+          50: "#f5f5f5",  // White for cards on dark backgrounds
+        },
+        error: "#cf6679", // Soft red for error messages, tuned for dark mode
+        warning: "#ffa726", // Warm orange for warnings, slightly brighter
+        info: "#80d8ff", // Cool blue for informational messages
+      },
       fontFamily: {
         sans: ["Inter", "sans-serif"], // Primary font for readability
         mono: ["Fira Code", "monospace"], // Use for code blocks or technical text

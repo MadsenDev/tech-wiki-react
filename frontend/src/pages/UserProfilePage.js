@@ -26,21 +26,21 @@ const UserProfilePage = () => {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center h-full text-xl text-gray-700">
+      <div className="flex items-center justify-center h-full text-xl text-neutral-400">
         User not found
       </div>
     );
   }
 
   return (
-    <div className="mx-auto space-y-2">
+    <div className="mx-auto space-y-6">
       <Header size="h1" color="primary" align="left" className="mb-6">
         {user.firstName} {user.lastName}
       </Header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Profile Section */}
-        <div className="lg:col-span-1 bg-white rounded-lg shadow-lg p-6">
+        <div className="lg:col-span-1 bg-neutral-700 rounded-lg shadow-md p-6 text-neutral-200">
           <div className="flex items-center mb-4">
             {/* Profile Picture */}
             {user.profilePicture ? (
@@ -50,40 +50,40 @@ const UserProfilePage = () => {
                 className="w-32 h-32 rounded-full object-cover mx-auto"
               />
             ) : (
-              <div className="w-32 h-32 rounded-full flex items-center justify-center bg-gray-200 text-gray-500 text-4xl mx-auto">
+              <div className="w-32 h-32 rounded-full flex items-center justify-center bg-neutral-600 text-neutral-400 text-4xl mx-auto">
                 <FaUser />
               </div>
             )}
           </div>
 
           {/* User Info */}
-          <div className="text-center text-neutral-700 space-y-4">
+          <div className="text-center space-y-4">
             <p className="text-2xl font-semibold">{user.username}</p>
-            <p className="text-sm text-neutral-500 capitalize">{user.role}</p>
+            <p className="text-sm text-neutral-400 capitalize">{user.role}</p>
             <div className="flex justify-center space-x-2 mt-2">
-              <FaEnvelope className="text-primary" />
+              <FaEnvelope className="text-secondary" />
               <span>{user.email}</span>
             </div>
             <div className="flex justify-center space-x-2 mt-1">
-              <FaUserShield className="text-primary" />
+              <FaUserShield className="text-secondary" />
               <span>Role: {user.role}</span>
             </div>
           </div>
         </div>
 
         {/* User's Guides Section */}
-        <div className="lg:col-span-3 bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-xl font-semibold text-secondary mb-4 flex items-center">
-            <FaBook className="mr-2 text-primary" /> Guides by {user.firstName} {user.lastName}
+        <div className="lg:col-span-3 bg-neutral-700 rounded-lg shadow-md p-6 text-neutral-200">
+          <h2 className="text-xl font-semibold text-primary mb-4 flex items-center">
+            <FaBook className="mr-2 text-secondary" /> Guides by {user.firstName} {user.lastName}
           </h2>
 
           {guides.length > 0 ? (
             <ul className="space-y-4">
               {guides.map((guide) => (
-                <li key={guide.id} className="border-b pb-4">
-                  <Link to={`/guide/${guide.slug}`} className="block hover:text-primary transition">
+                <li key={guide.id} className="border-b border-neutral-600 pb-4">
+                  <Link to={`/guide/${guide.slug}`} className="block hover:text-secondary transition">
                     <h3 className="text-lg font-semibold">{guide.title}</h3>
-                    <p className="text-sm text-neutral-500">
+                    <p className="text-sm text-neutral-400">
                       Published on: {new Date(guide.createdAt).toLocaleDateString()}
                     </p>
                   </Link>
@@ -91,7 +91,7 @@ const UserProfilePage = () => {
               ))}
             </ul>
           ) : (
-            <p className="text-neutral-600">This user hasn't published any guides yet.</p>
+            <p className="text-neutral-400">This user hasn't published any guides yet.</p>
           )}
         </div>
       </div>

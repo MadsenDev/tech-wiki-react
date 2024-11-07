@@ -88,6 +88,17 @@ export const useGuides = () => {
     }
   };
 
+  // Increment view count for a guide by its slug
+  const incrementViewCount = async (slug) => {
+    console.log('Incrementing view count for guide:', slug);
+    try {
+      const response = await axios.put(`/api/guides/slug/${slug}/view`);
+      return response.data; // Return the updated view count
+    } catch (err) {
+      setError('Error incrementing view count');
+    }
+  };
+
   const setPage = (page) => setPagination((prev) => ({ ...prev, page }));
   const setLimit = (limit) => setPagination((prev) => ({ ...prev, limit }));
 
@@ -104,6 +115,7 @@ export const useGuides = () => {
     fetchGuideBySlug,
     fetchGuidesByCategory,
     fetchGuidesByUserId,
+    incrementViewCount, // Expose the new method
     createGuide: async (guideData) => {
       try {
         await axios.post('/api/guides', guideData);

@@ -1,132 +1,103 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGuides } from "../hooks/useGuides";
 import Header from "../components/common/Header";
-import { marked } from "marked";
+import marked from "../utils/markedConfig"; // Import the configured marked
 
-// Utility to extract headers from markdown content and ensure unique IDs
+// Utility to extract headers and ensure unique IDs
 const extractHeaders = (markdown) => {
-    const headers = [];
-    const lines = markdown.split('\n');
-    const idCount = {}; // Track occurrences of each ID
-  
-    lines.forEach((line) => {
-      const match = line.match(/^(#{1,6})\s+(.*)/);
-      if (match) {
-        const level = match[1].length;
-        const text = match[2];
-        let baseId = text.toLowerCase().replace(/\s+/g, '-');
-        
-        // Initialize count or increment for each unique header instance
-        if (idCount[baseId] == null) idCount[baseId] = 0;
-        const id = `${baseId}-${idCount[baseId]++}`; // Append suffix and increment
+  const headers = [];
+  const lines = markdown.split("\n");
+  const idCount = {};
 
-        headers.push({ level, text, id });
-      }
-    });
-  
-    return headers;
-  };
-  
-// Add unique anchor IDs to headers in the markdown content
-const addAnchorIdsToMarkdown = (markdown) => {
-    const idCount = {}; // Track occurrences of each ID
-  
-    return markdown.replace(/^(#{1,6})\s+(.*)/gm, (match, hashes, title) => {
-      let baseId = title.toLowerCase().replace(/\s+/g, '-');
+  lines.forEach((line) => {
+    const match = line.match(/^(#{1,6})\s+(.*)/);
+    if (match) {
+      const level = match[1].length;
+      const text = match[2];
+      let baseId = text.toLowerCase().replace(/\s+/g, "-");
 
-      // Initialize count or increment for each unique header instance
       if (idCount[baseId] == null) idCount[baseId] = 0;
-      const id = `${baseId}-${idCount[baseId]++}`; // Append suffix and increment
+      const id = `${baseId}-${idCount[baseId]++}`;
 
-      return `${hashes} <span id="${id}">${title}</span>`;
-    });
-  };
+      headers.push({ level, text, id });
+    }
+  });
+
+  return headers;
+};
 
 const GuidePage = () => {
   const { slug } = useParams();
-  const { fetchGuideBySlug } = useGuides();
+  const { fetchGuideBySlug, incrementViewCount } = useGuides();
   const [guide, setGuide] = useState(null);
 
   useEffect(() => {
-    fetchGuideBySlug(slug).then((fetchedGuide) => {
-      setGuide(fetchedGuide);
+    fetchGuideBySlug(slug).then((data) => {
+      setGuide(data);
+
+      // Track unique views using localStorage
+      const viewedGuides = JSON.parse(localStorage.getItem("viewedGuides") || "[]");
+      if (!viewedGuides.includes(slug)) {
+        incrementViewCount(slug); // Increment view count on the server
+        viewedGuides.push(slug); // Add the slug to the list of viewed guides
+        localStorage.setItem("viewedGuides", JSON.stringify(viewedGuides));
+      }
     });
-  }, [slug, fetchGuideBySlug]);
+  }, [slug, fetchGuideBySlug, incrementViewCount]);
 
   if (!guide) {
     return (
-      <div className="flex items-center justify-center h-full text-xl text-gray-700">
+      <div className="flex items-center justify-center h-full text-xl text-neutral-400">
         Guide not found
       </div>
     );
   }
 
-  const authorName = `${guide.author?.firstName || ''} ${guide.author?.lastName || ''}`.trim();
-  const guideCategories = guide.categories || [];
-  
-  // Add anchor links to the markdown content
-  const guideContentWithAnchors = addAnchorIdsToMarkdown(guide.content);
-  const guideContentHtml = marked(guideContentWithAnchors);
-
-  // Extract headers for the overview
   const headers = extractHeaders(guide.content);
+  const guideContentHtml = marked(guide.content);
 
   return (
-    <div className="flex space-x-2">
-      {/* Guide Content (Left Column) */}
-      <div className="flex-1 bg-white rounded-lg shadow-md p-6">
-        <header className="mb-4 border-b pb-3">
-          <h1 className="text-3xl lg:text-4xl font-bold text-primary mb-2">{guide.title}</h1>
-
-          {/* Categories as badges */}
-          <div className="flex flex-wrap space-x-2 mt-2">
-            {guideCategories.map((category) => (
-              <span key={category.id} className="px-2 py-1 bg-gray-200 rounded text-sm">
-                {category.name}
-              </span>
-            ))}
-          </div>
-
-          <div className="text-sm text-neutral-600 space-y-1 mt-4">
-          <p>
-      <span className="font-semibold">Author:</span> 
-      {/* Wrap author name in Link to make it clickable */}
-      {guide.author ? (
-        <Link
-          to={`/profile/${guide.author.username}`} // Assuming the profile route is '/user/:id'
-          className="text-primary hover:underline ml-1"
-        >
-          {authorName}
-        </Link>
-      ) : (
-        'Unknown'
-      )}
-    </p>
+    <div className="flex space-x-4">
+      {/* Left Column */}
+      <div className="flex-1 bg-neutral-700 rounded-lg shadow-md p-6 text-neutral-200">
+        <header className="mb-4 border-b border-neutral-600 pb-3">
+          <h1 className="text-3xl lg:text-4xl font-bold text-primary mb-2">
+            {guide.title}
+          </h1>
+          <div className="text-sm mt-4">
             <p>
-              <span className="font-semibold">Rating:</span> {guide.rating || 'N/A'} / 5
+              <strong>Author:</strong>{" "}
+              {guide.author ? (
+                <Link to={`/profile/${guide.author.username}`} className="text-secondary hover:underline">
+                  {guide.author.firstName} {guide.author.lastName}
+                </Link>
+              ) : (
+                "Unknown"
+              )}
             </p>
           </div>
         </header>
 
-        {/* Guide content rendered from markdown with anchors */}
+        {/* Rendered Markdown */}
         <div
-          className="markdown prose prose-lg w-full max-w-none text-neutral-800 mt-6"
+          className="prose prose-invert w-full max-w-none text-neutral-300 mt-6"
           dangerouslySetInnerHTML={{ __html: guideContentHtml }}
         />
       </div>
 
-      {/* Outline Section (Right Column) */}
-      <div className="w-1/3 bg-gray-50 rounded-lg shadow-md p-6 max-h-screen overflow-y-auto">
-        <h2 className="text-2xl lg:text-3xl font-semibold mb-4 text-secondary">Overview</h2>
+      {/* Right Column */}
+      <div className="w-1/3 bg-neutral-700 rounded-lg shadow-md p-6 max-h-screen overflow-y-auto text-neutral-200">
+        <h2 className="text-2xl lg:text-3xl font-semibold mb-4 text-secondary">
+          Overview
+        </h2>
         {headers.length > 0 ? (
-          <ul className="space-y-2">
+          <ul>
             {headers.map((header, index) => (
               <li
                 key={index}
-                className={`ml-${header.level * 2} text-neutral-700`}
-                style={{ marginLeft: `${header.level * 1.5}rem` }} // Indentation based on header level
+                style={{ marginLeft: `${header.level * 1.5}rem` }}
+                className="text-neutral-400 hover:text-neutral-200"
               >
                 <a href={`#${header.id}`} className="hover:underline">
                   {header.text}
@@ -135,7 +106,7 @@ const GuidePage = () => {
             ))}
           </ul>
         ) : (
-          <p className="text-neutral-600">No sections available.</p>
+          <p className="text-neutral-500">No sections available.</p>
         )}
       </div>
     </div>

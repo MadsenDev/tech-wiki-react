@@ -20,10 +20,10 @@ const IconPicker = ({ onIconSelect }) => {
   };
 
   return (
-    <div className="icon-picker bg-white rounded-lg shadow-lg p-4">
+    <div className="icon-picker bg-neutral-800 rounded-lg shadow-lg p-4 text-neutral-200">
       {/* Search Input */}
-      <div className="mb-4 flex items-center border-b border-neutral-300 pb-2">
-        <FaSearch className="text-gray-500 mr-2" />
+      <div className="mb-4 flex items-center border-b border-neutral-600 pb-2">
+        <FaSearch className="text-neutral-400 mr-2" />
         <Input
           type="text"
           placeholder="Search icons..."
@@ -46,8 +46,8 @@ const IconPicker = ({ onIconSelect }) => {
                 onClick={() => handleIconClick(iconName)}
                 className={`flex justify-center items-center p-2 rounded-lg cursor-pointer transition-all ${
                   isSelected
-                    ? "bg-primary text-white shadow-md scale-105"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    ? "bg-primary text-neutral-900 shadow-md scale-105"
+                    : "bg-neutral-700 text-neutral-400 hover:bg-neutral-600"
                 }`}
                 title={iconName}
               >
@@ -56,7 +56,7 @@ const IconPicker = ({ onIconSelect }) => {
             );
           })
         ) : (
-          <p className="col-span-6 text-center text-sm text-gray-500 mt-4">
+          <p className="col-span-6 text-center text-sm text-neutral-400 mt-4">
             No icons found
           </p>
         )}
