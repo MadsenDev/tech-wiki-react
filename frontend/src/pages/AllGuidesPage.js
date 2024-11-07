@@ -18,7 +18,7 @@ const AllGuidesPage = () => {
   } = useGuides();
 
   useEffect(() => {
-    fetchGuides();
+    fetchGuides('published');
   }, [fetchGuides]);
 
   const handleNextPage = () => {

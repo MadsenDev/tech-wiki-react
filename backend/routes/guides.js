@@ -7,7 +7,18 @@ const { Op } = require('sequelize');
 // routes/guides.js
 router.get('/', async (req, res) => {
   try {
-    const { search, sort = 'title', sortOrder = 'ASC', categorySlug, page = 1, limit = 10 } = req.query;
+    const {
+      search,
+      sort = 'title',
+      sortOrder = 'ASC',
+      categorySlug,
+      page = 1,
+      limit = 10,
+      status, // Add status filter
+    } = req.query;
+
+    console.log(status);
+
     const where = {};
     const include = [
       { 
@@ -17,9 +28,10 @@ router.get('/', async (req, res) => {
       },
       { model: Comment },
       { model: Rating },
-      { model: User, as: 'author', attributes: ['id', 'username', 'firstName', 'lastName'] }
+      { model: User, as: 'author', attributes: ['id', 'username', 'firstName', 'lastName'] },
     ];
 
+    // Apply search filter
     if (search) {
       where[Op.or] = [
         { title: { [Op.like]: `%${search}%` } },
@@ -27,8 +39,14 @@ router.get('/', async (req, res) => {
       ];
     }
 
+    // Apply category filter
     if (categorySlug) {
       include[0].where = { slug: categorySlug };
+    }
+
+    // Apply status filter
+    if (status) {
+      where.status = status;
     }
 
     // Calculate offset based on page and limit
@@ -38,8 +56,8 @@ router.get('/', async (req, res) => {
       where,
       include,
       order: [[sort, sortOrder.toUpperCase()]],
-      limit: parseInt(limit), // Convert limit to integer
-      offset: parseInt(offset), // Convert offset to integer
+      limit: parseInt(limit),
+      offset: parseInt(offset),
     });
 
     res.json({
@@ -87,20 +105,27 @@ router.get('/slug/:slug', async (req, res) => {
 router.get('/user/:userId', async (req, res) => {
   try {
     const { userId } = req.params;
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, status } = req.query;
+
+    const where = { author_id: userId };
+
+    // Apply status filter
+    if (status) {
+      where.status = status;
+    }
 
     // Calculate offset for pagination
     const offset = (page - 1) * limit;
 
     const { count, rows: guides } = await Guide.findAndCountAll({
-      where: { author_id: userId },
+      where,
       include: [
         { model: Category, as: 'categories', through: { model: GuideCategory, attributes: [] } },
         { model: Comment },
         { model: Rating },
-        { model: User, as: 'author', attributes: ['id', 'username', 'firstName', 'lastName'] }
+        { model: User, as: 'author', attributes: ['id', 'username', 'firstName', 'lastName'] },
       ],
-      order: [['createdAt', 'DESC']], // Optional: sort by creation date
+      order: [['createdAt', 'DESC']],
       limit: parseInt(limit),
       offset: parseInt(offset),
     });

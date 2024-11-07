@@ -9,35 +9,40 @@ export const useGuides = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOption, setSortOption] = useState('title');
 
-  // Fetch guides with pagination, search, and sorting options
-  const fetchGuides = useCallback(async () => {
-    try {
-      const response = await axios.get('/api/guides', {
-        params: {
-          search: searchTerm,
-          sort: sortOption,
-          page: pagination.page,
-          limit: pagination.limit,
-        },
-      });
+  // Fetch guides with pagination, search, sorting, and optional status filter
+  const fetchGuides = useCallback(
+    async (status = '') => {
+      try {
+        const response = await axios.get('/api/guides', {
+          params: {
+            search: searchTerm,
+            sort: sortOption,
+            page: pagination.page,
+            limit: pagination.limit,
+            status, // Pass status as a query parameter
+          },
+        });
 
-      setGuides(response.data.guides);
-      setPagination((prev) => ({
-        ...prev,
-        totalPages: response.data.pagination.totalPages,
-      }));
-    } catch (err) {
-      setError('Error fetching guides');
-    }
-  }, [searchTerm, sortOption, pagination.page, pagination.limit]);
+        setGuides(response.data.guides);
+        setPagination((prev) => ({
+          ...prev,
+          totalPages: response.data.pagination.totalPages,
+        }));
+      } catch (err) {
+        setError('Error fetching guides');
+      }
+    },
+    [searchTerm, sortOption, pagination.page, pagination.limit]
+  );
 
-  // New function to fetch guides by a specific user ID
-  const fetchGuidesByUserId = async (userId) => {
+  // Fetch guides by user ID with optional status filtering
+  const fetchGuidesByUserId = async (userId, status = '') => {
     try {
       const response = await axios.get(`/api/guides/user/${userId}`, {
         params: {
           page: pagination.page,
           limit: pagination.limit,
+          status, // Pass status as a query parameter
         },
       });
 
@@ -60,9 +65,9 @@ export const useGuides = () => {
     }
   };
 
-  const fetchGuidesByCategory = async (categorySlug) => {
+  const fetchGuidesByCategory = async (categorySlug, status = '') => {
     try {
-      const response = await axios.get(`/api/guides`, { params: { categorySlug } });
+      const response = await axios.get(`/api/guides`, { params: { categorySlug, status } }); // Pass status
       setGuides(response.data.guides);
       setPagination((prev) => ({
         ...prev,
@@ -85,10 +90,10 @@ export const useGuides = () => {
 
   const setPage = (page) => setPagination((prev) => ({ ...prev, page }));
   const setLimit = (limit) => setPagination((prev) => ({ ...prev, limit }));
-  
+
   useEffect(() => {
     fetchCategories();
-  }, [fetchGuides]);
+  }, []);
 
   return {
     guides,
@@ -98,7 +103,7 @@ export const useGuides = () => {
     fetchGuides,
     fetchGuideBySlug,
     fetchGuidesByCategory,
-    fetchGuidesByUserId, // New function exposed here
+    fetchGuidesByUserId,
     createGuide: async (guideData) => {
       try {
         await axios.post('/api/guides', guideData);
