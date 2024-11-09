@@ -15,3 +15,4 @@ frontend/build
 
 # DS_Store for Mac users
 .DS_Store
+backend/scripts/createUser.js

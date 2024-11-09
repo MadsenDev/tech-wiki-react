@@ -27,6 +27,17 @@ const extractHeaders = (markdown) => {
   return headers;
 };
 
+// Add IDs to headers in the markdown content for anchor linking
+const addAnchorIdsToMarkdown = (markdown) => {
+  const idCount = {}; // Ensure unique IDs for repeated headers
+  return markdown.replace(/^(#{1,6})\s+(.*)/gm, (match, hashes, title) => {
+    let baseId = title.toLowerCase().replace(/\s+/g, "-");
+    if (idCount[baseId] == null) idCount[baseId] = 0;
+    const id = `${baseId}-${idCount[baseId]++}`;
+    return `${hashes} <span id="${id}">${title}</span>`;
+  });
+};
+
 const GuidePage = () => {
   const { slug } = useParams();
   const { fetchGuideBySlug, incrementViewCount } = useGuides();
@@ -54,8 +65,12 @@ const GuidePage = () => {
     );
   }
 
+  // Process markdown content with added anchor IDs
+  const guideContentWithAnchors = addAnchorIdsToMarkdown(guide.content);
+  const guideContentHtml = marked(guideContentWithAnchors);
+
+  // Extract headers for the outline
   const headers = extractHeaders(guide.content);
-  const guideContentHtml = marked(guide.content);
 
   return (
     <div className="flex space-x-4">
