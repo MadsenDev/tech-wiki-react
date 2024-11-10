@@ -6,11 +6,11 @@ async function createUser() {
     const password = '4ncY2jYv';  // Replace with your desired password
 
     const newUser = await User.create({
-      username: 'MadsenDev',
-      email: 'chris@madsens.dev',
+      username: 'ChatGPT',
+      email: 'chatgpt@madsens.dev',
       password: password,
-      firstName: 'Christoffer',
-      lastName: 'Madsen',
+      firstName: 'Chat',
+      lastName: 'GPT',
       role: 'admin',  // or 'admin', 'moderator'
       profilePicture: null,
     });
